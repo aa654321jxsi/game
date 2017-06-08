@@ -179,7 +179,7 @@ export default {
   .logo {
     width: 6rem;
     height: 6rem;
-    background: url(../../../src/img/login-logo.fba23da.png) no-repeat;
+    background: url(../../../static/images/login-logo.png) no-repeat;
     background-size: 100%;
     margin: 3rem auto 0;
   }

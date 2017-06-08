@@ -2,37 +2,48 @@
 <template>
 
   <div>
-    <!--位置-->
-
-      <!-- <mu-appbar :title="'北京六合彩'">
-        <mu-icon-button icon='menu' slot="right" />
-        <mu-icon-button icon='expand_more' slot="right" />
-        <mu-icon-button icon='backspace' @click="toggle()" slot="left"/>
-      </mu-appbar> -->
 
       <div class="header_bar">
         <mu-icon-button icon='menu'/>
         <div class="header_title">
-          <div><span>北京六合彩</span></div>
+          <div><span>北京PK10</span></div>
 
-          <mu-icon-button icon='expand_more'/>
+          <mu-icon-button icon='expand_more'  @click="dailogClick"/>
         </div>
 
-        <div class="back">后退</div>
+        <div class="back" @click="dailogClick">后退</div>
       </div>
-
-
-
+      <dailog-q v-if="dailogIs" :titleDate="titleDate" v-on:listenToChildEvent="changeDate"></dailog-q>
     <div class="jtcaizg">
         <div class="indexkjdt">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+
+            <!-- <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tbody><tr valign="top">
                       <td width="52"><img src="../../../static/images/c1.png"></td>
                                 <td width="5"></td>
                                 <td><h3 class="title">北京PK拾-<span><b class="title_b">{{round-1}}</b></span>期</h3>
                         <p><span ><b class="font_b">{{round}}</b></span>期：<span>两面盘</span>&nbsp;&nbsp;封盘：<span class="font_b">{{myfilter(endtime-30)}}</span>开奖：<span class="font_b">{{myfilter(endtime)}}</span></p></td>
                             </tr>
-                        </tbody></table>
+                        </tbody>
+
+                      </table> -->
+
+
+                      <div class="jtc_titl">
+                        <div>
+                          <img src="../../../static/images/c1.png">
+                        </div>
+                        <div>
+                          <div>
+                            <h3 class="title"><span>北京PK拾-</span><b class="title_b">{{round-1}}</b><span>期</span></h3>
+                          </div>
+                          <div>
+                            <p><span ><b class="font_a">{{round}}</b></span>期：<span>两面盘</span>&nbsp;&nbsp;封盘：<span class="font_b">{{myfilter(endtime-30)}}</span>开奖：<span class="font_b">{{myfilter(endtime)}}</span></p>
+                          </div>
+                        </div>
+                      </div>
+
+
         </div>
                     <div class="indexkjdc">
 
@@ -40,17 +51,6 @@
                               {{item_n}}
                         </div>
                     </div>
-    </div>
-
-
-    <div class="pcznavc">
-        <a @click="toggle(1)" v-bind:class="{'a': pcznavc_a==1 }">兩面盤</a>
-        <i></i>
-        <a @click="toggle(2)" v-bind:class="{'a': pcznavc_a==2 }" >冠、亞軍 組合</a>
-        <i></i>
-        <a @click="toggle(3)" v-bind:class="{'a': pcznavc_a==3 }" >一至五名</a>
-        <i></i>
-        <a @click="toggle(4)" v-bind:class="{'a': pcznavc_a==4 }">六至十名</a>
     </div>
 
 
@@ -92,11 +92,14 @@
 // import { mapGetters } from 'vuex'
 import footGuide from '../../components/footer/footGuide'
 import { loginTrue,getUid,getBjpk,getPeilv } from '../../api'
-
+import dailogQ from '../../components/dailogQ'
 export default {
    data() {
     return {
-      de:true,
+      dailogIs:false,
+      titleDate:['lmp','gyh','yzw','lzs'],
+      body:{},
+      de:false,
       loading:false,
       hotmsgs: {},
       uid_info:0,
@@ -106,17 +109,27 @@ export default {
       endtime:0,
       isOpen:true,
       lotteryList:{},
-      numberList:0,
+      numberList:[],
       dialog: false,
       codeMessage:'',
       keyValue:null,
-      keyValue_m:null,
       setTime:null,
       pcznavc_a:1//二級選項卡，默認顯示兩面盤
     }
   },
-methods:{
 
+methods:{
+  changeDate(data){
+
+    this.lotteryList = getBjpk()[data];
+    this.dailogIs = !this.dailogIs;
+
+  },
+
+dailogClick(){
+  console.log('DASDASDAS');
+  this.dailogIs = !this.dailogIs;
+},
   focus(e){
     e.target.value=this.keyValue;
   },
@@ -127,18 +140,18 @@ methods:{
         case 1:
         this.lotteryList = getBjpk().lmp
 
-          break;
-          case 2:
+      break;
+      case 2:
 
-            this.lotteryList = getBjpk().gyh
-            break;
-            case 3:
+        this.lotteryList = getBjpk().gyh
+        break;
+        case 3:
 
-            this.lotteryList = getBjpk().yzw
+        this.lotteryList = getBjpk().yzw
 
-              break;
-              case 4:
-              this.lotteryList = getBjpk().lzs
+        break;
+        case 4:
+        this.lotteryList = getBjpk().lzs
 
                 break;
         default:
@@ -219,51 +232,69 @@ mounted(){
 },
 
 //初始化
-beforeCreate(){
-  this.lotteryList=getBjpk().lmp
-  let uidInfo = getUid();
-   this.uid_info = uidInfo;
-   console.log(uidInfo);
-     let params = {
-             params:{
-
-              game_code: 51,   //  登录账号
-
-              type_code:0,  //  登录密码
-              uid: uidInfo
-            }
-          }    // 获取token配置
-
-
-
- this.$http.get(getPeilv(),params).then(res => {
-  if (res.data.error_no == 505) { //  1未登陆
-    this.$router.push({ path: '/login' }) // 跳转到登陆
-  }
-  else if (res.data.error_no == 41) {
-    console.log('游戏未开盘')
-  }
-  else if(res.data.error_no == 38){
+created(){
+this.de = true;
+  let newTime = Date.parse(new Date());
+  let oldTime = localStorage.getItem('im_time');
+  let bodyS = localStorage.getItem('im_body');
+  console.log(oldTime-newTime);
+  if (newTime<oldTime) {
+    this.endtime = (oldTime-newTime)/1000;
+    console.log(bodyS,111111);
+    this.lotteryList=getBjpk().lmp;
+    this.round = this.body.round;
+    // console.log(JSON.parse(bodyS),444444);
+    this.body=JSON.parse(bodyS)
+    console.log(this.body,444444);
+    this.round = this.body.round;
+    // this.endtime = this.body.endtime;
+    this.isOpen = this.body.isopen;
+    this.numberList = this.body.number;
+    console.log(this.numberList,11111);
+    this.lottry_s= (document.getElementsByClassName("input_a"));
     this.de=false;
-       localStorage.setItem('im_body', JSON.stringify(res.data.body))
-       console.log(localStorage.getItem('im_body'));
-       this.lotteryList=getBjpk().lmp;
-       this.round = res.data.body.round;
-       this.endtime = res.data.body.endtime;
-       this.isOpen = res.data.body.isopen;
-       this.numberList = res.data.body.number;
-       this.lottry_s= (document.getElementsByClassName("input_a"));
-   //  console.log(res.data,111111)
-   if (res.data.body.endtime=1) {
-
-   }
-    console.log(new Date())
-    console.log(res.data,111111);
   }
   else {
-    console.log('根本没有41的状态吗');
+
+    this.lotteryList=getBjpk().lmp
+    let uidInfo = getUid();
+     this.uid_info = uidInfo;
+       let params = {
+               params:{
+                game_code: 51,   //  登录账号
+                type_code:0,  //  登录密码
+                uid: uidInfo
+              }
+            }    // 获取token配置
+   this.$http.get(getPeilv(),params).then(res => {
+     this.de=false;
+    if (res.data.error_no == 505) { //  1未登陆
+      this.$router.push({ path: '/login' }) // 跳转到登陆
+    }
+    else if (res.data.error_no == 41) {
+      console.log('游戏未开盘')
+    }
+    else if(res.data.error_no == 38){
+
+
+         let timestamp = Date.parse(new Date())+res.data.body.endtime*1000;
+         localStorage.setItem('im_time', JSON.stringify(timestamp))
+         localStorage.setItem('im_body', JSON.stringify(res.data.body))
+         console.log(localStorage.getItem('im_time'));
+         this.lotteryList=getBjpk().lmp;
+         this.round = res.data.body.round;
+         this.endtime = res.data.body.endtime;
+         this.isOpen = res.data.body.isopen;
+         this.numberList = res.data.body.number;
+         this.lottry_s= (document.getElementsByClassName("input_a"));
+     //  console.log(res.data,111111)
+
+
+    }
+
+   })
   }
- })
+
 },
 mounted(){
   setInterval(()=>{
@@ -285,14 +316,12 @@ endtime: function () {
      console.log(uidInfo);
        let params = {
                params:{
-
                 game_code: 51,
-
                 type_code:0,
                 uid: uidInfo
               }
             }
-this.loading = true;
+  this.loading = true;
    this.$http.get(getPeilv(),params).then(res => {
     if (res.data.error_no == 505) { //  1未登陆
       this.$router.push({ path: '/login' }) // 跳转到登陆
@@ -302,6 +331,9 @@ this.loading = true;
     }
     else if(res.data.error_no == 38){
 this.loading = false;
+let timestamp = Date.parse(new Date())+res.data.body.endtime*1000;
+localStorage.setItem('im_time', JSON.stringify(timestamp))
+localStorage.setItem('im_body', JSON.stringify(res.data.body))
          this.round = res.data.body.round;
          this.endtime = res.data.body.endtime;
          this.isOpen = res.data.body.isopen;
@@ -329,6 +361,7 @@ this.loading = false;
   },
   components: {
     footGuide,
+    dailogQ
     // 'ex-simple': model,
 
   }
@@ -421,7 +454,7 @@ this.loading = false;
       justify-content: flex-start;
       width: 100%;
       background: #fff;
-      padding-bottom: 100/20rem;
+      padding-bottom: 110/20rem;
       text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
 
       >h3{
@@ -505,6 +538,31 @@ this.loading = false;
   .back{
     padding: 4/20rem;
   }
+}
+
+.jtc_titl{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  >div:nth-of-type(1){
+    width: 15%
+  }
+  >div:nth-of-type(2){
+    >div:nth-of-type(2){
+      font-size: 12/20rem
+
+    }
+  }
+  .font_b{
+    width: 30/20rem
+  }
+  .font_a{
+    display: inline-block;
+    width:55/20rem
+  }
+}
+.indexkjdc{
+  margin-top: 5/20rem
 }
 
 </style>

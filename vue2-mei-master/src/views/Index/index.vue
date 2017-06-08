@@ -3,7 +3,7 @@
   <div>
     <!--位置-->
 
-      <mu-appbar :title="''">
+      <mu-appbar :title="'广州市'">
         <mu-icon-button icon='menu' slot="right" />
         <!--<mu-icon-button icon='expand_more' slot="right" />-->
 
@@ -226,7 +226,7 @@ export default {
 
   >div:nth-of-type(1){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c1.png) no-repeat;
+      background: url(../../../static/images/c1.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
@@ -234,7 +234,7 @@ export default {
 
   >div:nth-of-type(2){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c2.png) no-repeat;
+      background: url(../../../static/images/c2.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
@@ -242,7 +242,7 @@ export default {
 
   >div:nth-of-type(3){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c3.png) no-repeat;
+      background: url(../../../static/images/c3.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
@@ -250,7 +250,7 @@ export default {
 
   >div:nth-of-type(4){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c4.png) no-repeat;
+      background: url(../../../static/images/c4.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
@@ -258,7 +258,7 @@ export default {
 
   >div:nth-of-type(5){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c5.png) no-repeat;
+      background: url(../../../static/images/c5.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
@@ -266,14 +266,14 @@ export default {
 
   >div:nth-of-type(6){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c6.png) no-repeat;
+      background: url(../../../static/images/c6.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
   }
   >div:nth-of-type(7){
     >div:nth-of-type(1){
-      background: url(../../../src/img/c7.png) no-repeat;
+      background: url(../../../static/images/c7.png) no-repeat;
       background-position: center;
       background-size: 90%;
     }
